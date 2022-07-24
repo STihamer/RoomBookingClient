@@ -1,5 +1,6 @@
 <h1> {{room.id == 0 ? 'Add' : 'Edit'}} Room</h1>
 
+<div class="bg-warning" *ngIf="message">{{message}}</div>
 <form [formGroup]="roomForm">
   <div class="form-group">
     <label for="name">Name</label>

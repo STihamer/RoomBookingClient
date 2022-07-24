@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Layout, LayoutCapacity, Room} from "../../../model/Room";
 import {DataService} from "../../../data.service";
@@ -17,6 +17,12 @@ export class RoomEditComponent implements OnInit, OnDestroy {
   @Input()
   room: Room = new Room();
 
+
+  @Output()
+  dataChangedEvent = new EventEmitter();
+
+  message = '';
+
   layouts = Object.keys(Layout);
 
   layoutEnum: any = Layout;
@@ -31,12 +37,12 @@ export class RoomEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-        this.resetEventSubscription.unsubscribe();
-    }
+    this.resetEventSubscription.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.initializeForm();
-     this.resetEventSubscription = this.formResetService.resetRoomFormEvent.subscribe(
+    this.resetEventSubscription = this.formResetService.resetRoomFormEvent.subscribe(
       room => {
         this.room = room;
         this.initializeForm();
@@ -62,6 +68,7 @@ export class RoomEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.message = 'Saving...';
     this.room.name = this.roomForm.controls['roomName'].value;
     this.room.location = this.roomForm.value['location'];
     this.room.capacities = new Array<LayoutCapacity>()
@@ -75,18 +82,23 @@ export class RoomEditComponent implements OnInit, OnDestroy {
     if (this.room.id < 1) {
       this.dataService.addRoom(this.room).subscribe(
         next => {
+          this.dataChangedEvent.emit();
           this.router.navigate(['admin', 'rooms'], {
             queryParams: {action: 'view', id: next.id}
           });
-        }
+        },
+        error => this.message = 'Something went wrong, you may wish to try again'
       );
     } else {
       this.dataService.updateRoom(this.room).subscribe(
         next => {
+          this.dataChangedEvent.emit();
           this.router.navigate(['admin', 'rooms'], {
             queryParams: {action: 'view', id: next.id}
           });
-        }
+        },
+        error =>
+          this.message = 'Something went wrong, you may wish to try again'
       );
     }
   }

@@ -23,6 +23,10 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadData();
+
+  }
+  loadData() {
     this.dataService.users.subscribe(
       next => {
         this.users = next;
@@ -39,7 +43,6 @@ export class UsersComponent implements OnInit {
         this.message = 'An error occurred - please contact support';
       }
     )
-
   }
 
   setUser(id: number) {
