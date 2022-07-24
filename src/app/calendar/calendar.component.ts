@@ -3,7 +3,6 @@ import {Booking} from "../model/Booking";
 import {DataService} from "../data.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {formatDate} from "@angular/common";
-import {User} from "../model/User";
 
 @Component({
   selector: 'app-calendar',
@@ -13,6 +12,7 @@ import {User} from "../model/User";
 export class CalendarComponent implements OnInit {
   bookings: Array<Booking> = new Array<Booking>();
   selectedDate: string = '';
+  dataLoaded = false;
 
   constructor(private dataService: DataService,
               private router: Router,
@@ -28,7 +28,10 @@ export class CalendarComponent implements OnInit {
           this.selectedDate = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
         }
         this.dataService.getBookings(this.selectedDate).subscribe(
-          next => this.bookings = next
+          next => {
+            this.bookings = next;
+            this.dataLoaded = true;
+          }
         );
       }
     )

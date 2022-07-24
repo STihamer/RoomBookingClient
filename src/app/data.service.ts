@@ -52,7 +52,7 @@ export class DataService {
     return this.http.post<User>(environment.restUrl + '/api/users', fullUser);
   }
 
-  private getCorrectedRoom(room: Room){
+  private getCorrectedRoom(room: Room) {
     const correctedRoom = {id: room.id, name: room.name, location: room.location, capacities: []};
     for (const lc of room.capacities) {
       let correctLayout;
@@ -81,22 +81,31 @@ export class DataService {
 
   deleteRoom(id: number): Observable<any> {
 
-    return of(null);
+    return this.http.delete(environment.restUrl + '/api/rooms/' + id);
   }
 
   deleteUser(id: number): Observable<any> {
+    return this.http.delete(environment.restUrl + '/api/users/' + id);
 
-    return of(null);
   }
 
   resetUserPassword(id: number): Observable<any> {
-    return of(null);
+    return this.http.get(environment.restUrl + '/api/users/resetPassword/' + id);
   }
 
-  getBookings(date: string): Observable<Array<Booking>> {
-    // @ts-ignore
-    return of(null);
+  getBookings(date: string) : Observable<Array<Booking>> {
+    return this.http.get<Array<Booking>>(environment.restUrl + "/api/bookings/" + date)
+      .pipe(
+        map ( data => {
+          const bookings = new Array<Booking>();
+          for (const booking of data) {
+            bookings.push(Booking.fromHttp(booking));
+          }
+          return bookings;
+        })
+      );
   }
+
 
   getBooking(id: number): Observable<any> {
     return of(null);
