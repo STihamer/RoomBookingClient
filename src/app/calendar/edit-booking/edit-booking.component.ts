@@ -1,0 +1,59 @@
+import {Component, OnInit} from '@angular/core';
+import {Booking} from "../../model/Booking";
+import {Layout, Room} from "../../model/Room";
+import {DataService} from "../../data.service";
+import {User} from "../../model/User";
+import {ActivatedRoute, Router} from "@angular/router";
+
+@Component({
+  selector: 'app-edit-booking',
+  templateUrl: './edit-booking.component.html',
+  styleUrls: ['./edit-booking.component.css']
+})
+export class EditBookingComponent implements OnInit {
+
+  booking: Booking = new Booking();
+  rooms: Array<Room> = new Array<Room>();
+  layouts = Object.keys(Layout);
+  layoutEnum: any = Layout;
+  users: Array<User> = new Array<User>();
+
+  constructor(private dataService: DataService,
+              private route: ActivatedRoute,
+              private router: Router) {
+
+  }
+
+  ngOnInit(): void {
+
+    this.dataService.rooms.subscribe(
+      next => this.rooms = next
+    );
+
+    this.dataService.users.subscribe(
+      next => this.users = next
+    );
+    const id = this.route.snapshot.queryParams['id'];
+    if (id) {
+      this.dataService.getBooking(+id).subscribe(
+        next => this.booking = next
+      );
+    } else {
+      this.booking = new Booking();
+    }
+
+  }
+
+  onSubmit() {
+    if (this.booking.id != 0) {
+      this.dataService.saveBooking(this.booking).subscribe(
+        next => this.router.navigate([''])
+      );
+    } else {
+      this.dataService.addBooking(this.booking).subscribe(
+        next => this.router.navigate([''])
+      );
+    }
+
+  }
+}
