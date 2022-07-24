@@ -13,6 +13,8 @@ export class UsersComponent implements OnInit {
   users: Array<User> = new Array<User>();
   selectedUser: any;
   action: string = '';
+  message = 'Loading dat ... please wait';
+  loadingData = true;
 
   constructor(private dataService: DataService,
               private router: Router,
@@ -24,16 +26,20 @@ export class UsersComponent implements OnInit {
     this.dataService.users.subscribe(
       next => {
         this.users = next;
+        this.loadingData = false;
+        this.route.queryParams.subscribe(params => {
+          const id = params['id'];
+          this.action = params['action'];
+          if (id) {
+            this.selectedUser = this.users.find(user => user.id === +id);
+          }
+
+        });
+      }, errors => {
+        this.message = 'An error occurred - please contact support';
       }
     )
-    this.route.queryParams.subscribe(params => {
-      const id = params['id'];
-      this.action = params['action'];
-      if(id){
-        this.selectedUser = this.users.find(user => user.id === +id);
-      }
 
-    });
   }
 
   setUser(id: number) {
