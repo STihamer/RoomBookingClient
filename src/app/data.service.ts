@@ -108,7 +108,10 @@ export class DataService {
 
 
   getBooking(id: number): Observable<any> {
-    return of(null);
+  return this.http.get<Booking>(environment.restUrl + '/api/bookings?id=' + id)
+    .pipe(map(data => {
+      return Booking.fromHttp(data);
+    }))
   }
 
   saveBooking(booking: Booking): Observable<Booking> {
@@ -125,7 +128,7 @@ export class DataService {
 
   deleteBooking(id: number): Observable<any> {
 
-    return of(null);
+    return this.http.delete(environment.restUrl + "/api/bookings/" + id);
   }
 
 

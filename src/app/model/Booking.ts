@@ -8,7 +8,7 @@ export class Booking {
   // @ts-ignore
   layout: Layout = Layout;
   title: string = '';
-  date: Date = new Date();
+  date = new Date();
   startTime: string = '';
   endTime: string = '';
   participants: number = 0;
@@ -16,6 +16,7 @@ export class Booking {
   getDateAsDate() {
     return new Date(this.date);
   }
+
 
   static fromHttp(booking: Booking) {
     const newBooking = new Booking();

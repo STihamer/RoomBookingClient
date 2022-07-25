@@ -4,6 +4,7 @@
   <input type="date" [(ngModel)]="selectedDate" name="selectedDate" (change)="dateChanged()"/></h2>
 
 <a class="btn btn-primary mt-3 mb-5" (click)="addBooking()">New Booking</a>
+<div *ngIf="message">{{message}}</div>
 <div *ngIf="dataLoaded">
   <!-- only show this h3 if there are no bookings! -->
   <h3 class="mt-5" *ngIf="bookings.length === 0">There are no meetings currently scheduled for this date.</h3>
