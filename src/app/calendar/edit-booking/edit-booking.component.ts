@@ -4,7 +4,6 @@ import {Layout, Room} from "../../model/Room";
 import {DataService} from "../../data.service";
 import {User} from "../../model/User";
 import {ActivatedRoute, Router} from "@angular/router";
-import {EditBookingDataService} from "../../edit-booking-data.service";
 import {map} from "rxjs";
 import {formatDate} from "@angular/common";
 
@@ -25,14 +24,14 @@ export class EditBookingComponent implements OnInit {
 
   constructor(private dataService: DataService,
               private route: ActivatedRoute,
-              private router: Router,
-              private editBookingDataService: EditBookingDataService) {
+              private router: Router) {
 
   }
 
   ngOnInit(): void {
-    this.rooms = this.editBookingDataService.rooms;
-    this.users = this.editBookingDataService.users;
+    this.rooms = this.route.snapshot.data['rooms'];
+    this.users = this.route.snapshot.data['users'];
+
     const id = this.route.snapshot.queryParams['id'];
     if (id) {
       this.dataService.getBooking(+id).pipe(
@@ -47,7 +46,6 @@ export class EditBookingComponent implements OnInit {
           this.booking = next;
           this.dataLoaded = true;
           this.message = '';
-
         }
       );
     } else {
@@ -59,15 +57,17 @@ export class EditBookingComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.booking.id != 0) {
-      this.dataService.saveBooking(this.booking).subscribe(
-        next => this.router.navigate([''])
+    if (this.booking.id < 1) {
+      this.dataService.addBooking(this.booking).subscribe(
+        next => this.router.navigate(['']),
+        error => this.message = 'something went wrong : the booking wasn\'t saved.'
       );
     } else {
-      this.dataService.addBooking(this.booking).subscribe(
-        next => this.router.navigate([''])
+      this.dataService.updateBooking(this.booking).subscribe(
+        next => this.router.navigate(['']),
+        error => this.message = 'something went wrong : the booking wasn\'t saved.'
       );
     }
-
   }
+
 }

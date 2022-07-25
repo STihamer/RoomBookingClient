@@ -63,6 +63,7 @@ export class DataService {
         }
       }
       const correctedLayout = {layout: correctLayout, capacity: lc.capacity};
+
       // @ts-ignore
       correctedRoom.capacities.push(correctedLayout)
     }
@@ -114,16 +115,15 @@ export class DataService {
     }))
   }
 
-  saveBooking(booking: Booking): Observable<Booking> {
-    // @ts-ignore
-    return of(null);
+  updateBooking(booking: Booking): Observable<Booking> {
+    return this.http.put<Booking>(environment.restUrl + '/api/bookings', this.getCorrectedBooking(booking));
   }
 
 
-  // @ts-ignore
+
   addBooking(newBooking: Booking): Observable<Booking> {
-    // @ts-ignore
-    return of(null);
+    return this.http.post<Booking>(environment.restUrl + '/api/bookings', this.getCorrectedBooking(newBooking));
+
   }
 
   deleteBooking(id: number): Observable<any> {
@@ -131,5 +131,28 @@ export class DataService {
     return this.http.delete(environment.restUrl + "/api/bookings/" + id);
   }
 
+  private getCorrectedBooking(booking: Booking) {
 
+    let correctLayout;
+    for (let member in Layout) {
+      // @ts-ignore
+      if (Layout[member] === booking.layout) {
+        correctLayout = member;
+      }
+    }
+
+    if (booking.startTime.length < 8) {
+      booking.startTime = booking.startTime + ':00';
+    }
+
+    if (booking.endTime.length < 8) {
+      booking.endTime = booking.endTime + ':00';
+    }
+
+    const correctedBooking = {id : booking.id,  room: this.getCorrectedRoom(booking.room), user: booking.user,
+      title: booking.title, date: booking.date, startTime: booking.startTime, endTime: booking.endTime,
+      participants: booking.participants, layout: correctLayout};
+
+    return correctedBooking;
+  }
 }

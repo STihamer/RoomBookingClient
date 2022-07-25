@@ -85,7 +85,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   checkIfPasswordsAreValid() {
-    if (this.formUser.id != null) {
+    if (this.formUser.id != 0) {
       this.passwordsAreValid = true;
       this.passwordsMatch = true;
     } else {

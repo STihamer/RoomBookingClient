@@ -8,7 +8,7 @@ export class Booking {
   // @ts-ignore
   layout: Layout = Layout;
   title: string = '';
-  date = new Date();
+  date: string = new Date();
   startTime: string = '';
   endTime: string = '';
   participants: number = 0;

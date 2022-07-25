@@ -11,8 +11,8 @@
 
   <div class="row row-striped" *ngFor="let booking of bookings">
     <div class="col-2 text-right">
-      <h1 class="display-4"><span class="badge badge-secondary">{{booking.getDateAsDate() | date: 'dd'}}</span></h1>
-      <h2>{{booking.getDateAsDate() | date: 'MMM'}}</h2>
+      <h1 class="display-4"><span class="badge badge-secondary">{{selectedDate | date: 'dd'}}</span></h1>
+      <h2>{{selectedDate | date: 'MMM'}}</h2>
     </div>
     <div class="col-10">
       <h3 class="text-uppercase"><strong>{{booking.title}}</strong></h3>
@@ -25,7 +25,7 @@
       </ul>
       <div class="row">
         <div class="col-6">
-          <p class="mb-0">{{booking.user.name}}</p>
+          <p class="mb-0">{{booking.user?.name}}</p>
           <p class="mb-0">{{booking.layout}}</p>
           <p>Participants: {{booking.participants}}</p>
         </div>

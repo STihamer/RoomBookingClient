@@ -30,6 +30,7 @@ export class CalendarComponent implements OnInit {
     this.route.queryParams.subscribe(
       params => {
         this.selectedDate = params['date'];
+        console.log(this.selectedDate)
         if (!this.selectedDate) {
           this.selectedDate = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
         }
@@ -46,11 +47,11 @@ export class CalendarComponent implements OnInit {
   }
 
   editBooking(id: number) {
-    this.router.navigate(['editBookingLoad'], {queryParams: {id: id}});
+    this.router.navigate(['editBooking'], {queryParams: {id: id}});
   }
 
   addBooking() {
-    this.router.navigate(['editBookingLoad']);
+    this.router.navigate(['addBooking']);
   }
 
   deleteBooking(id: number) {
